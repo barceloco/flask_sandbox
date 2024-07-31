@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
         svg.append("g")
           .call(d3.axisLeft(y));
 
-        // Add dots
+        // Add dots with drag behavior
         svg.append('g')
           .selectAll("dot")
           .data(data)
@@ -51,7 +51,11 @@ document.addEventListener("DOMContentLoaded", function() {
             .attr("cx", function (d) { return x(d.key); } )
             .attr("cy", function (d) { return y(d.val); } )
             .attr("r", 1.50)
-            .style("fill", "#69b3a2");
+            .style("fill", "#69b3a2")
+            .call(d3.drag()
+                .on("start", dragStarted)
+                .on("drag", dragged)
+                .on("end", dragEnded));
 
         circle = svg.append("circle")
             .attr("r", 0)
@@ -73,6 +77,42 @@ document.addEventListener("DOMContentLoaded", function() {
         listeningRect.on("mouseleave", function () {
             tooltip.style("display", "none");
             circle.transition().duration(50).attr("r", 0);
+        });
+    }
+
+    function dragStarted(event, d) {
+        d3.select(this).raise().attr("stroke", "black");
+    }
+
+    function dragged(event, d) {
+        d3.select(this)
+            .attr("cy", y.invert(event.y))
+            .attr("cx", x(d.key));
+        tooltip.style("display", "none");
+        circle.transition().duration(50).attr("r", 0);
+    }
+
+    function dragEnded(event, d) {
+        d3.select(this).attr("stroke", null);
+        const newY = y.invert(event.y);
+        d.val = newY;
+        sendUpdatedData(d);
+    }
+
+    function sendUpdatedData(updatedData) {
+        fetch('/api/update-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data updated on server:', data);
+        })
+        .catch(error => {
+            console.error('Error updating data:', error);
         });
     }
 

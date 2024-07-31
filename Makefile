@@ -12,5 +12,5 @@ stop:
 bash:
 	@echo "to launch the server, type:"
 	@echo "python3 -m flask run --host=0.0.0.0"
-	docker run --rm -it -v "${PWD}"/app/:/app/ -p ${PORT}5000 flask /bin/bash
+	docker run --rm -it -v "${PWD}"/app/:/app/ -p ${PORT}:5000 flask /bin/bash
 
