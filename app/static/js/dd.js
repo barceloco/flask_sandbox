@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const c = Number(data.c);
 
         const circle = svg.append("circle")
-            .attr("cx", 10 * a)
-            .attr("cy", 10 * b)
+            .attr("cx", 100 * a)
+            .attr("cy", 100 * b)
             .attr("r", 25 * c)
             .attr("fill", "green")
             .attr("class", "draggable")
