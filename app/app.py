@@ -4,7 +4,7 @@ from flask_socketio import SocketIO
 # import eventlet
 import random, string, json
 
-
+# eventlet.monkey_patch()
 
 class DataStore:
     def __init__(self):
@@ -37,6 +37,9 @@ data_store = DataStore()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "".join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits, k=25))
 socketio = SocketIO(app)
+
+data_generation_task = None
+is_generating_data = False
 
 
 @app.route('/')
@@ -103,7 +106,7 @@ def update_data():
 def index():
     return render_template('socket_example.html')
 
-def generate_random_numbers():
+def generate_random_numbers_v1():
     """Emit random numbers to the client every second."""
     while True:
         socketio.sleep(.1)  # Sends data every 1 second
@@ -116,17 +119,50 @@ def generate_random_numbers():
         socketio.emit('data', json.dumps(data))
         # socketio.emit('update_circle', data)
 
-
-@socketio.on('connect')
+@socketio.on('connect') # v1
 def handle_connect():
     """Handle client connection."""
-    print('Client connected')
-    socketio.start_background_task(target=generate_random_numbers)
+    print('Client connected using v1 pathway')
+    socketio.start_background_task(target=generate_random_numbers_v1)
 
-@socketio.on('disconnect')
+@socketio.on('disconnect') # v2
 def handle_disconnect():
     """Handle client disconnection."""
-    print('Client disconnected')
+    print('Client disconnected using v1 pathway')
+
+
+
+
+# @app.route('/socket_example2')
+# def index():
+#     return render_template('socket_example2.html')
+
+
+# def generate_random_numbers():
+#     global is_generating_data
+#     while is_generating_data:
+#         a, b, c = 2 * np.random.rand(3) - 1
+#         socketio.emit('update_data', {'x': a, 'y': b, 'color': c})
+#         time.sleep(0.1)
+
+
+# @socketio.on('start_data')
+# def start_data():
+#     global is_generating_data, data_generation_task
+#     if not is_generating_data:
+#         is_generating_data = True
+#         print("start_data(): data generation started.")
+#         data_generation_task = socketio.start_background_task(generate_random_numbers)
+
+# @socketio.on('stop_data')
+# def stop_data():
+#     global is_generating_data
+#     is_generating_data = False
+#     if data_generation_task:
+#         print("stop_data(): data generation stopped.")
+#         eventlet.greenthread.kill(data_generation_task)
+#         data_generation_task = None
+
 
 
 if __name__ == '__main__':
