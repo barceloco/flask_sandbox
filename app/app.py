@@ -1,5 +1,10 @@
 from flask import Flask, render_template, jsonify, request
 import numpy as np
+from flask_socketio import SocketIO
+# import eventlet
+import random, string, json
+
+
 
 class DataStore:
     def __init__(self):
@@ -30,10 +35,17 @@ coordinates = {"a": np.random.rand(), "b": np.random.rand(), "c": np.random.rand
 data_store = DataStore()
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "".join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits, k=25))
+socketio = SocketIO(app)
+
 
 @app.route('/')
-def hello_world():
+def overview():
     return render_template('index.html')
+
+@app.route('/plot')
+def hello_world():
+    return render_template('plot.html')
 
 @app.route('/dd')
 def drag_and_drop():
@@ -83,6 +95,39 @@ def update_data():
     print(updated_data)
     data_store.update_data(updated_data['key'], updated_data['val'])
     return jsonify({'status': 'success', 'data': data_store.get_data()})
+
+
+
+
+@app.route('/socket_example')
+def index():
+    return render_template('socket_example.html')
+
+def generate_random_numbers():
+    """Emit random numbers to the client every second."""
+    while True:
+        socketio.sleep(.1)  # Sends data every 1 second
+        data = {
+            'x': 2 * np.random.rand() - 1,
+            'y': 2 * np.random.rand() - 1,
+            'color': 2 * np.random.rand() - 1
+        }
+        print(data)
+        socketio.emit('data', json.dumps(data))
+        # socketio.emit('update_circle', data)
+
+
+@socketio.on('connect')
+def handle_connect():
+    """Handle client connection."""
+    print('Client connected')
+    socketio.start_background_task(target=generate_random_numbers)
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Handle client disconnection."""
+    print('Client disconnected')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

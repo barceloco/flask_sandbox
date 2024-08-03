@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask D3.js Push Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            flex-direction: column;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="startStopButton">Start</button>
+    <div id="plot"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="static/js/socket_example.js"></script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask D3 WebSocket Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        svg {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const width = 200;
+        const height = 200;
+        const initialBlackLevel = 0.5;
+
+        // Create SVG container
+        const svg = d3.select('body')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+        // Append circle to SVG
+        const circle = svg.append('circle')
+            .attr('cx', width / 2)
+            .attr('cy', height / 2)
+            .attr('r', 10)
+            .style('fill', `rgb(${initialBlackLevel * 100}%, ${initialBlackLevel * 100}%, ${initialBlackLevel * 100}%)`);
+
+        // Connect to the WebSocket server
+        const socket = io();
+
+        socket.on('update_circle', function (data) {
+            console.log('Received data:', data);
+
+            // Calculate new circle properties
+            const newX = (width / 2) + (data.x * 100);
+            const newY = (height / 2) + (data.y * 100);
+            const newBlackLevel = Math.max(0, Math.min(1, initialBlackLevel + (data.color / 10)));
+
+            // Update circle position and color
+            circle.attr('cx', newX)
+                .attr('cy', newY)
+                .style('fill', `rgb(${newBlackLevel * 100}%, ${newBlackLevel * 100}%, ${newBlackLevel * 100}%)`);
+        });
+    </script>
+</body>
+</html>
+ -->

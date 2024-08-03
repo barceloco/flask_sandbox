@@ -3,7 +3,7 @@ from exnada/python:latest
 USER root
 RUN apt update
 RUN apt install python3-pip -y
-RUN pip3 install Flask
+RUN pip3 install Flask flask-socketio eventlet
 USER exnada
 WORKDIR /app
 
