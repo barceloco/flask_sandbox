@@ -46,6 +46,27 @@ is_generating_data = False
 def overview():
     return render_template('index.html')
 
+
+
+
+# Function to add two numbers
+def adding(x, y):
+    return x + y
+
+@app.route('/addition')
+def addition():
+    return render_template('addition.html')
+
+@app.route('/add', methods=['POST'])
+def add():
+    data = request.json
+    x = data.get('x', 0)
+    y = data.get('y', 0)
+    result = adding(x, y)
+    return jsonify({'result': result})
+
+
+
 @app.route('/plot')
 def hello_world():
     return render_template('plot.html')
@@ -67,6 +88,8 @@ def dd_update_coordinates():
     coordinates["a"] = data["a"]/10.0
     coordinates["b"] = data["b"]/10.0
     return jsonify({"status": "success"})
+
+
 
 
 # Initialize the 50x50 matrix with random values
@@ -103,7 +126,7 @@ def update_data():
 
 
 @app.route('/socket_example')
-def index():
+def socket_example():
     return render_template('socket_example.html')
 
 def generate_random_numbers_v1():

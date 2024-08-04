@@ -34,18 +34,5 @@ RUN useradd -l -m -s /bin/bash -N -u "${EXNADA_UID}" -g ${EXNADA_GID} "${EXNADA_
 USER ${EXNADA_USER}
 ENV HOME="/home/${EXNADA_USER}"
 WORKDIR ${HOME}
-# CMD ["echo", "-[${OWNER}/docker-stacks]-"]
-# 
-# 
-# from exnada/python:latest
-# 
-# USER root
-# RUN apt update
-# RUN apt install python3-pip -y
-# RUN pip3 install Flask flask-socketio eventlet
-# USER exnada
-# WORKDIR /app
-# 
-# COPY . .
-# 
+
 CMD ["python3", "-m", "flask", "--app", "/app/app.py", "run", "--host=0.0.0.0"]
