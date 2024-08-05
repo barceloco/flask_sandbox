@@ -29,7 +29,7 @@ RUN python3.9 -m pip install --no-cache-dir --upgrade pip \
 RUN useradd -l -m -s /bin/bash -N -u "${EXNADA_UID}" -g ${EXNADA_GID} "${EXNADA_USER}" \
  && chmod g+w /etc/passwd
 
- COPY app.py /app/
+COPY app.py /app/
 
 USER ${EXNADA_USER}
 ENV HOME="/home/${EXNADA_USER}"
