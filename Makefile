@@ -1,6 +1,6 @@
 stack="exnada/flask:1.0"
 docker=/usr/local/bin/docker
-port=5522
+port=5528
 args=--rm -v '${PWD}'/app/:/app/ -p ${port}:5000
 bash=/bin/bash
 
